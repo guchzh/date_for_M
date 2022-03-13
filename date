@@ -1,0 +1,16 @@
+let
+    源 = List.TransformMany( { 2020 .. 2021 }, each { 1 .. 12 }, ( yyyy, MM ) => #date( yyyy, MM, 1 ) ),
+    创建表 = Table.ExpandListColumn( #table( { "日期" }, { { 源 } } ), "日期" ),
+    转换类型 = Table.TransformColumns( 创建表, { "日期", Date.From } ),
+    添加列_年数 = Table.AddColumn( 转换类型, "年数", each Date.Year( [日期] ), Int64.Type ),
+    添加列_年 = Table.AddColumn( 添加列_年数, "年", each "Y" & Date.ToText( [日期], "yyyy" ), type text ),
+    添加列_月数 = Table.AddColumn( 添加列_年, "月数", each Date.Month( [日期] ), Int64.Type ),
+    添加列_月 = Table.AddColumn( 添加列_月数, "月", each "M" & Date.ToText( [日期], "MM" ), type text ),
+    添加列_年月数 = Table.AddColumn(添加列_月, "年月数", each Int64.From( Date.ToText( [日期], "yyyyMM" ) ), Int64.Type ),
+    添加列_年月 = Table.AddColumn( 添加列_年月数, "年月", each Date.ToText( [日期], "yyyy.MM" ), type text ),
+    添加列_季数 = Table.AddColumn( 添加列_年月, "季数", each Date.QuarterOfYear( [日期] ), Int64.Type ),
+    添加列_季 = Table.AddColumn( 添加列_季数, "季", each "Q" & Text.From( Date.QuarterOfYear( [日期] ) ), type text ),
+    添加列_年季 = Table.AddColumn( 添加列_季, "年季",
+        each "Y" & Text.From( Date.Year( [日期] ) ) & " Q" & Text.From( Date.QuarterOfYear( [日期] ) ), type text )
+in
+    添加列_年季
