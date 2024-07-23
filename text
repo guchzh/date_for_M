@@ -1,0 +1,2 @@
+List.Intersect( { Text.SplitAny( Text.Upper( [文件路径全称] ), " \_-." ), { "JOYIN", "HAPPY" } } )
+List.Intersect( { Text.SplitAny( Text.Upper( [Name] ), " \_-." ), { "HAPPY", "JOYIN", "SYNCFUN" } } ){0}?
